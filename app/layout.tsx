@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { SiteHeader } from "@/components/site-header";
 import "./globals.css";
 
 const inter = Inter({
@@ -29,18 +30,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${jetBrainsMono.variable}`}>
+        <SiteHeader />
         <div className="app-shell">
-          <header className="bootstrap-header">
-            <div>
-              <p className="bootstrap-header__eyebrow">developer dictionary</p>
-              <h1>Urban Codetionary</h1>
-            </div>
-            <p className="bootstrap-header__copy">
-              Building a durable and secure home for coding slang and technical
-              language.
-            </p>
-          </header>
-          <main>{children}</main>
+          <main className="site-main">{children}</main>
         </div>
       </body>
     </html>
