@@ -636,6 +636,192 @@ a:focus-visible {
   font-size: 0.92rem;
 }
 
+.status-panel,
+.admin-shell {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-shell);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(14px);
+}
+
+.status-panel {
+  display: grid;
+  gap: 18px;
+  padding: 24px;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.status-card {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid var(--border-soft);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.status-card code {
+  font-family: var(--font-mono);
+  font-size: 0.94em;
+}
+
+.status-card.is-good {
+  border-color: rgba(38, 135, 82, 0.18);
+  background: rgba(234, 250, 241, 0.82);
+}
+
+.status-card.is-warn {
+  border-color: rgba(201, 121, 24, 0.18);
+  background: rgba(255, 247, 234, 0.92);
+}
+
+.status-card__label {
+  margin: 0;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.status-card h2,
+.admin-shell__copy h2 {
+  margin: 0;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.status-card p,
+.admin-shell__copy p:last-child,
+.admin-form__actions p,
+.field small,
+.form-banner p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.status-card__action {
+  width: fit-content;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.admin-shell {
+  display: grid;
+  gap: 24px;
+  padding: 28px;
+}
+
+.admin-shell__copy {
+  max-width: 760px;
+}
+
+.admin-form {
+  display: grid;
+  gap: 20px;
+}
+
+.admin-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.field {
+  display: grid;
+  gap: 10px;
+}
+
+.field--wide {
+  grid-column: 1 / -1;
+}
+
+.field span {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  border: 1px solid rgba(17, 24, 39, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.86);
+  padding: 14px 16px;
+  color: var(--text-main);
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 128px;
+}
+
+.field input[type="range"] {
+  padding: 0;
+  accent-color: var(--accent);
+  border: 0;
+  background: transparent;
+}
+
+.field__range-labels {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-muted);
+}
+
+.field__error {
+  margin: 0;
+  color: #b91c1c;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.form-banner {
+  display: grid;
+  gap: 6px;
+  padding: 16px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--border-soft);
+}
+
+.form-banner--success {
+  border-color: rgba(38, 135, 82, 0.2);
+  background: rgba(234, 250, 241, 0.9);
+}
+
+.form-banner--error {
+  border-color: rgba(185, 28, 28, 0.15);
+  background: rgba(254, 242, 242, 0.92);
+}
+
+.admin-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+}
+
+.primary-button {
+  min-height: 48px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--accent);
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 14px 28px rgba(65, 88, 217, 0.22);
+}
+
 @keyframes blink {
   50% {
     opacity: 0;
@@ -645,6 +831,11 @@ a:focus-visible {
 @media (max-width: 960px) {
   .site-header__inner,
   .feed-header {
+    grid-template-columns: 1fr;
+  }
+
+  .status-grid,
+  .admin-form__grid {
     grid-template-columns: 1fr;
   }
 
