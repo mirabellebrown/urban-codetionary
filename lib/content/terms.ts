@@ -27,7 +27,7 @@ export type TermEntry = {
   videos: VideoResource[];
 };
 
-const terms: TermEntry[] = [
+export const starterTerms: TermEntry[] = [
   {
     slug: "sql-injection",
     name: "SQL Injection",
@@ -152,7 +152,7 @@ export function getPublishedTerms(query = "") {
   const normalizedQuery = query.trim().toLowerCase();
 
   const filtered = normalizedQuery
-    ? terms.filter((term) => {
+    ? starterTerms.filter((term) => {
         const searchable = [
           term.name,
           term.categoryTag,
@@ -166,7 +166,7 @@ export function getPublishedTerms(query = "") {
 
         return searchable.includes(normalizedQuery);
       })
-    : terms;
+    : starterTerms;
 
   return [...filtered].sort(
     (left, right) =>
@@ -177,11 +177,11 @@ export function getPublishedTerms(query = "") {
 }
 
 export function getTermBySlug(slug: string) {
-  return terms.find((term) => term.slug === slug);
+  return starterTerms.find((term) => term.slug === slug);
 }
 
 export function getRelatedTerms(currentSlug: string, categoryTag: string) {
-  return terms
+  return starterTerms
     .filter((term) => term.slug !== currentSlug && term.categoryTag === categoryTag)
     .slice(0, 2);
 }
