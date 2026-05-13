@@ -34,6 +34,7 @@ export function toSlug(value: string) {
 export function buildTermSubmissionInput(formData: FormData) {
   return {
     termName: toStringValue(formData.get("termName")),
+    domain: toStringValue(formData.get("domain")),
     categoryTag: toStringValue(formData.get("categoryTag")),
     subtopicTag: toStringValue(formData.get("subtopicTag")),
     complexity: Number(toStringValue(formData.get("complexity")) || 0),
@@ -46,6 +47,7 @@ export function buildTermSubmissionInput(formData: FormData) {
 
 const baseSchema = z.object({
   termName: z.string().trim().min(2, "Term names should be at least 2 characters.").max(80),
+  domain: z.string().trim().min(2, "Domain should describe where this term is used.").max(80),
   categoryTag: z.string().trim().min(2).max(48),
   subtopicTag: z.string().trim().min(2).max(48),
   complexity: z.coerce.number().int().min(0).max(100),

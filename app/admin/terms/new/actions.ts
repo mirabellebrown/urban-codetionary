@@ -80,6 +80,7 @@ export async function submitTermAction(
         slug,
         name: payload.termName,
         partOfSpeech: "noun",
+        domain: payload.domain,
         categoryTag: payload.categoryTag,
         subtopicTag: payload.subtopicTag,
         complexity: payload.complexity,

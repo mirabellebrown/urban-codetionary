@@ -15,12 +15,16 @@ Urban Codetionary is a developer-first dictionary for coding slang and technical
 3. Install dependencies with `npm install`.
 4. Start the app with `npm run dev`.
 
+See `docs/deployment.md` for the Vercel, environment variable, migration, and production verification checklist.
+
 ## Useful scripts
 - `npm run dev` starts the app locally.
 - `npm run lint` runs ESLint.
 - `npm run typecheck` runs TypeScript without emitting files.
 - `npm run build` verifies the production build.
 - `npm run db:generate` creates Drizzle migrations.
+- `npm run db:migrate` applies Drizzle migrations to the configured database.
+- `npm run db:seed` loads starter terms into the configured database.
 - `npm run db:studio` opens Drizzle Studio.
 
 ## Secure-by-default choices

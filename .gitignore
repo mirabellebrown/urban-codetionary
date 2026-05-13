@@ -5,7 +5,6 @@ node_modules
 .env.*.local
 .cache
 .config
-drizzle
 coverage
 tsconfig.tsbuildinfo
 npm-debug.log*

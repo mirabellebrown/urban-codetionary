@@ -1,5 +1,6 @@
 export type TermFormField =
   | "termName"
+  | "domain"
   | "categoryTag"
   | "subtopicTag"
   | "complexity"

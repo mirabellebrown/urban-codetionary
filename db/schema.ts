@@ -22,6 +22,7 @@ export const terms = pgTable("terms", {
   slug: varchar("slug", { length: 140 }).notNull().unique(),
   name: varchar("name", { length: 80 }).notNull(),
   partOfSpeech: varchar("part_of_speech", { length: 24 }).notNull().default("noun"),
+  domain: varchar("domain", { length: 80 }).notNull(),
   categoryTag: varchar("category_tag", { length: 48 }).notNull(),
   subtopicTag: varchar("subtopic_tag", { length: 48 }).notNull(),
   complexity: integer("complexity").notNull(),

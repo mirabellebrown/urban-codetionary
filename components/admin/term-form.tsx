@@ -43,6 +43,17 @@ export function TermForm() {
           <FieldError errors={state.fieldErrors.termName} />
         </label>
 
+        <label className="field field--wide">
+          <span>Domain</span>
+          <input
+            defaultValue="attack vector"
+            name="domain"
+            placeholder="attack vector, debugging method, runtime failure"
+            type="text"
+          />
+          <FieldError errors={state.fieldErrors.domain} />
+        </label>
+
         <label className="field">
           <span>Category tag</span>
           <select defaultValue="security" name="categoryTag">
