@@ -1,10 +1,10 @@
 import type { MetadataRoute } from "next";
-import { getPublishedTerms } from "@/lib/content/terms";
+import { getPublishedTerms } from "@/lib/data/terms";
 import { env } from "@/lib/env";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = env.siteUrl;
-  const termEntries = getPublishedTerms().map((term) => ({
+  const termEntries = (await getPublishedTerms()).map((term) => ({
     url: `${baseUrl}/term/${term.slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,

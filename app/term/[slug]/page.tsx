@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { TermCard } from "@/components/term-card";
-import { getRelatedTerms, getTermBySlug } from "@/lib/content/terms";
+import { getRelatedTerms, getTermBySlug } from "@/lib/data/terms";
 
 type TermPageProps = {
   params: Promise<{ slug: string }>;
@@ -12,7 +12,7 @@ export async function generateMetadata({
   params,
 }: TermPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const term = getTermBySlug(slug);
+  const term = await getTermBySlug(slug);
 
   if (!term) {
     return {
@@ -28,13 +28,13 @@ export async function generateMetadata({
 
 export default async function TermPage({ params }: TermPageProps) {
   const { slug } = await params;
-  const term = getTermBySlug(slug);
+  const term = await getTermBySlug(slug);
 
   if (!term) {
     notFound();
   }
 
-  const relatedTerms = getRelatedTerms(term.slug, term.categoryTag);
+  const relatedTerms = await getRelatedTerms(term.slug, term.categoryTag);
 
   return (
     <div className="page-stack">

@@ -1,6 +1,6 @@
 import { HeroSearch } from "@/components/hero-search";
 import { TermCard } from "@/components/term-card";
-import { getPublishedTerms } from "@/lib/content/terms";
+import { getPublishedTerms } from "@/lib/data/terms";
 
 type HomePageProps = {
   searchParams?: Promise<{ q?: string }>;
@@ -9,7 +9,7 @@ type HomePageProps = {
 export default async function HomePage({ searchParams }: HomePageProps) {
   const resolvedSearchParams = (await searchParams) ?? {};
   const query = typeof resolvedSearchParams.q === "string" ? resolvedSearchParams.q : "";
-  const terms = getPublishedTerms(query);
+  const terms = await getPublishedTerms(query);
 
   return (
     <div className="page-stack">
