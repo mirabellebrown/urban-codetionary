@@ -9,6 +9,9 @@
     "start": "next start",
     "lint": "eslint .",
     "test": "vitest run",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "test:all": "npm run test:unit && npm run test:e2e",
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
@@ -34,6 +37,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
+    "@playwright/test": "^1.60.0",
     "@types/node": "^25.7.0",
     "@types/pg": "^8.20.0",
     "@types/react": "^19.2.14",

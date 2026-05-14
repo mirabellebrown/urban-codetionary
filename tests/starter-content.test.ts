@@ -4,6 +4,8 @@ import {
   getPublishedTerms,
   getRelatedTerms,
   getTermsBySubtopic,
+  getTermSearchScore,
+  starterTerms,
 } from "@/lib/content/terms";
 
 describe("starter content fallback", () => {
@@ -17,6 +19,21 @@ describe("starter content fallback", () => {
     const results = getPublishedTerms("oauth");
 
     expect(results[0].slug).toBe("oauth");
+  });
+
+  it("keeps starter slugs unique for stable public URLs", () => {
+    const slugs = starterTerms.map((term) => term.slug);
+
+    expect(new Set(slugs).size).toBe(slugs.length);
+  });
+
+  it("weights exact search matches above broad text matches", () => {
+    const oauth = starterTerms.find((term) => term.slug === "oauth");
+    const csrf = starterTerms.find((term) => term.slug === "csrf");
+
+    expect(oauth).toBeDefined();
+    expect(csrf).toBeDefined();
+    expect(getTermSearchScore(oauth!, "oauth")).toBeGreaterThan(getTermSearchScore(csrf!, "oauth"));
   });
 
   it("groups categories for homepage browsing", () => {

@@ -51,7 +51,7 @@ export function buildTermSubmissionInput(formData: FormData) {
 const baseSchema = z.object({
   termName: z.string().trim().min(2, "Term names should be at least 2 characters.").max(80),
   domain: z.string().trim().min(2, "Domain should describe where this term is used.").max(80),
-  categoryTag: z.string().trim().min(2).max(48),
+  categoryTag: z.enum(CATEGORY_OPTIONS, "Choose one of the supported category tags."),
   subtopicTag: z.string().trim().min(2).max(48),
   complexity: z.coerce.number().int().min(0).max(100),
   eli5: z.string().trim().min(30, "ELI5 explanation should be at least 30 characters.").max(1400),
