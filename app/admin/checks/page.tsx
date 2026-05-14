@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { triggerCheckAction } from "@/app/admin/checks/actions";
+import { RunCheckForm } from "@/components/admin/run-check-form";
 import { getCurrentSession, isAdminSession } from "@/lib/auth";
 import { env } from "@/lib/env";
 import {
@@ -23,6 +23,42 @@ function getStatusClass(run?: AdminCheckRun) {
   }
 
   return run.conclusion === "success" ? "is-good" : "is-bad";
+}
+
+function getResultDisplay(run?: AdminCheckRun) {
+  if (!run) {
+    return {
+      className: "is-muted",
+      icon: "·",
+      title: "Not run yet",
+      detail: "Run this check to see a clear result here.",
+    };
+  }
+
+  if (run.status !== "completed") {
+    return {
+      className: "is-warn",
+      icon: "...",
+      title: "Running now",
+      detail: "GitHub Actions is still working. Refresh in a moment.",
+    };
+  }
+
+  if (run.conclusion === "success") {
+    return {
+      className: "is-good",
+      icon: "✓",
+      title: "Passed",
+      detail: "This check passed. No action needed.",
+    };
+  }
+
+  return {
+    className: "is-bad",
+    icon: "×",
+    title: "Failed",
+    detail: "This check failed. Open the GitHub log to see the exact failed step.",
+  };
 }
 
 function formatDuration(seconds: number | null) {
@@ -56,6 +92,9 @@ function CheckCard({
   latestRun?: AdminCheckRun;
   definition: (typeof adminCheckDefinitions)[number];
 }) {
+  const result = getResultDisplay(latestRun);
+  const isRunning = latestRun ? latestRun.status !== "completed" : false;
+
   return (
     <article className="check-card">
       <div className="check-card__header">
@@ -70,29 +109,34 @@ function CheckCard({
 
       <p>{definition.description}</p>
 
-      {latestRun ? (
-        <div className="check-card__result">
-          <strong>{latestRun.summary}</strong>
-          <small>
-            Last run {formatDate(latestRun.createdAt)} · duration {formatDuration(latestRun.durationSeconds)}
-          </small>
-          <Link className="table-action" href={latestRun.htmlUrl} target="_blank">
-            open GitHub log
-          </Link>
+      <div className={`check-card__result ${result.className}`}>
+        <div className="check-card__verdict">
+          <span aria-hidden="true" className="check-card__verdict-icon">
+            {result.icon}
+          </span>
+          <div>
+            <strong>{result.title}</strong>
+            <small>{result.detail}</small>
+          </div>
         </div>
-      ) : (
-        <div className="check-card__result">
-          <strong>No recent run found.</strong>
-          <small>Run this check to see a plain-language result here.</small>
-        </div>
-      )}
+        {latestRun ? (
+          <>
+            <small>
+              Last run {formatDate(latestRun.createdAt)} · duration {formatDuration(latestRun.durationSeconds)}
+            </small>
+            <Link className="table-action" href={latestRun.htmlUrl} target="_blank">
+              open GitHub log
+            </Link>
+          </>
+        ) : null}
+      </div>
 
-      <form action={triggerCheckAction}>
-        <input name="check" type="hidden" value={definition.key} />
-        <button className="primary-button" disabled={!canRun} type="submit">
-          Run {definition.label.toLowerCase()}
-        </button>
-      </form>
+      <RunCheckForm
+        canRun={canRun}
+        check={definition.key}
+        isRunning={isRunning}
+        label={definition.label}
+      />
     </article>
   );
 }
