@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { SiteHeader } from "@/components/site-header";
 import { env } from "@/lib/env";
 import "./globals.css";
@@ -49,6 +50,7 @@ export default function RootLayout({
         <div className="app-shell">
           <main className="site-main">{children}</main>
         </div>
+        <Analytics />
       </body>
     </html>
   );
