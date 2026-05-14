@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ChecksAutoRefresh } from "@/components/admin/checks-auto-refresh";
 import { RunCheckForm } from "@/components/admin/run-check-form";
 import { getCurrentSession, isAdminSession } from "@/lib/auth";
 import { env } from "@/lib/env";
@@ -40,7 +41,8 @@ function getResultDisplay(run?: AdminCheckRun) {
       className: "is-warn",
       icon: "...",
       title: "Running now",
-      detail: "GitHub Actions is still working. Refresh in a moment.",
+      detail:
+        "GitHub Actions is still working. This page refreshes on its own every few seconds until the run finishes.",
     };
   }
 
@@ -148,7 +150,10 @@ function RecentRuns({ runs }: { runs: AdminCheckRun[] }) {
         <div className="admin-table__empty">
           <p className="section-kicker">recent runs</p>
           <h2>No dashboard-triggered runs yet.</h2>
-          <p>Start with one check above, then refresh this page to follow the result.</p>
+          <p>
+            Start with one check above. While a run is active, this page updates automatically; you can
+            still use refresh results anytime.
+          </p>
         </div>
       </section>
     );
@@ -200,6 +205,13 @@ export default async function AdminChecksPage({ searchParams }: AdminChecksPageP
       }))
     : emptyRuns;
   const loadError = runs.error ?? "";
+  const anyCheckInProgress =
+    canRun &&
+    !loadError &&
+    adminCheckDefinitions.some((definition) => {
+      const latest = runs.latestByCheck[definition.key];
+      return latest ? latest.status !== "completed" : false;
+    });
 
   return (
     <div className="page-stack">
@@ -259,6 +271,7 @@ export default async function AdminChecksPage({ searchParams }: AdminChecksPageP
 
       {isAdmin ? (
         <>
+          {canRun && !loadError ? <ChecksAutoRefresh active={anyCheckInProgress} /> : null}
           <section className="admin-shell">
             <div className="admin-shell__copy">
               <p className="section-kicker">control panel</p>
@@ -267,9 +280,14 @@ export default async function AdminChecksPage({ searchParams }: AdminChecksPageP
                 Use smaller checks while you are working, then run all checks before
                 important releases.
               </p>
-              <Link className="table-action" href="/admin/checks">
-                refresh results
-              </Link>
+              <p className="admin-shell__meta">
+                <Link className="table-action" href="/admin/checks">
+                  refresh results
+                </Link>
+                {anyCheckInProgress ? (
+                  <span> · auto-refreshing while GitHub shows a run in progress</span>
+                ) : null}
+              </p>
             </div>
             <div className="checks-grid">
               {adminCheckDefinitions.map((definition) => (
