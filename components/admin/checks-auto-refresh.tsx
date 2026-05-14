@@ -17,6 +17,8 @@ export function ChecksAutoRefresh({ active }: { active: boolean }) {
       return;
     }
 
+    router.refresh();
+
     const id = setInterval(() => {
       router.refresh();
     }, REFRESH_MS);
