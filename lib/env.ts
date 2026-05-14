@@ -9,6 +9,10 @@ const envSchema = z.object({
   ADMIN_EMAILS: z.string().optional(),
   ADMIN_GITHUB_LOGINS: z.string().optional(),
   DATABASE_URL: z.string().min(1).optional(),
+  GITHUB_ACTIONS_TOKEN: z.string().min(1).optional(),
+  GITHUB_ACTIONS_OWNER: z.string().min(1).optional(),
+  GITHUB_ACTIONS_REPO: z.string().min(1).optional(),
+  GITHUB_ACTIONS_WORKFLOW: z.string().min(1).optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);
@@ -31,7 +35,12 @@ export const env = {
   adminEmails,
   adminGitHubLogins,
   databaseUrl: values.DATABASE_URL ?? "",
+  githubActionsToken: values.GITHUB_ACTIONS_TOKEN ?? "",
+  githubActionsOwner: values.GITHUB_ACTIONS_OWNER ?? "mirabellebrown",
+  githubActionsRepo: values.GITHUB_ACTIONS_REPO ?? "urban-codetionary",
+  githubActionsWorkflow: values.GITHUB_ACTIONS_WORKFLOW ?? "admin-checks.yml",
   githubEnabled: Boolean(values.GITHUB_ID && values.GITHUB_SECRET),
   authEnabled: Boolean(values.NEXTAUTH_SECRET && values.GITHUB_ID && values.GITHUB_SECRET),
   databaseEnabled: Boolean(values.DATABASE_URL),
+  githubActionsEnabled: Boolean(values.GITHUB_ACTIONS_TOKEN),
 };

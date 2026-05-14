@@ -1,0 +1,64 @@
+name: Admin Checks
+run-name: "Admin checks: ${{ inputs.check }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      check:
+        description: "Which verification check should run?"
+        required: true
+        type: choice
+        options:
+          - all
+          - lint
+          - unit
+          - e2e
+          - typecheck
+          - build
+
+jobs:
+  checks:
+    name: Run selected check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        if: ${{ inputs.check == 'all' || inputs.check == 'lint' }}
+        run: npm run lint
+
+      - name: Unit tests
+        if: ${{ inputs.check == 'all' || inputs.check == 'unit' }}
+        run: npm run test:unit
+
+      - name: Typecheck
+        if: ${{ inputs.check == 'all' || inputs.check == 'typecheck' }}
+        run: npm run typecheck
+
+      - name: Build
+        if: ${{ inputs.check == 'all' || inputs.check == 'build' }}
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+
+      - name: Install Playwright browsers
+        if: ${{ inputs.check == 'all' || inputs.check == 'e2e' }}
+        run: npx playwright install --with-deps chromium
+
+      - name: End-to-end tests
+        if: ${{ inputs.check == 'all' || inputs.check == 'e2e' }}
+        run: npm run test:e2e
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"

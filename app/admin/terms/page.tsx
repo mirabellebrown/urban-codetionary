@@ -33,9 +33,14 @@ export default async function AdminTermsPage() {
             reviewable admin surface.
           </p>
         </div>
-        <Link className="detail-intro__back" href="/admin/terms/new">
-          + create a new draft
-        </Link>
+        <div className="admin-inline-actions">
+          <Link className="detail-intro__back" href="/admin/checks">
+            checks dashboard
+          </Link>
+          <Link className="detail-intro__back" href="/admin/terms/new">
+            + create a new draft
+          </Link>
+        </div>
       </section>
 
       {!isAdmin ? (

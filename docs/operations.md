@@ -30,6 +30,35 @@ npm run build
 - CI installs Playwright browsers with Linux system dependencies before running end-to-end tests.
 - Treat any failed CI check as a release blocker until it is understood and fixed.
 
+## Admin Checks Dashboard
+- The admin-only checks dashboard lives at `/admin/checks`.
+- The dashboard does not run shell commands inside Vercel. It triggers the `Admin Checks` GitHub Actions workflow and reads back run results.
+- Use smaller checks while developing:
+  - `Lint` for style and obvious code mistakes.
+  - `Unit tests` for validation, search, and link-policy logic.
+  - `Typecheck` for TypeScript correctness.
+  - `Build` for production compilation.
+  - `End-to-end tests` for browser workflow coverage.
+  - `All checks` before important releases.
+- To enable the run buttons in production, create a fine-grained GitHub token scoped to this repository with:
+  - `Actions`: read and write
+  - `Contents`: read
+- Add that token to Vercel as:
+
+```text
+GITHUB_ACTIONS_TOKEN=...
+```
+
+- Optional overrides are available if the repository ever moves:
+
+```text
+GITHUB_ACTIONS_OWNER=mirabellebrown
+GITHUB_ACTIONS_REPO=urban-codetionary
+GITHUB_ACTIONS_WORKFLOW=admin-checks.yml
+```
+
+- After changing these environment variables, redeploy in Vercel before using the dashboard.
+
 ## Error Handling
 - Check Vercel function logs for server-rendering, auth, and database errors.
 - Treat failed admin writes as high priority because they can block publishing.
