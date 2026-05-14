@@ -15,6 +15,8 @@ export const auditActionEnum = pgEnum("audit_action", [
   "term_created",
   "term_updated",
   "term_published",
+  "term_unpublished",
+  "term_rolled_back",
 ]);
 
 export const terms = pgTable("terms", {

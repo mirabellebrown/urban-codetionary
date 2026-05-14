@@ -8,6 +8,13 @@
       "when": 1778695076323,
       "tag": "0000_yellow_sauron",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778695568696,
+      "tag": "0001_equal_leper_queen",
+      "breakpoints": true
     }
   ]
 }

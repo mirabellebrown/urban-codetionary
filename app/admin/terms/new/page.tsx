@@ -11,6 +11,9 @@ export default async function NewTermPage() {
   return (
     <div className="page-stack">
       <section className="detail-intro">
+        <Link className="detail-intro__back" href="/admin/terms">
+          manage existing terms
+        </Link>
         <div>
           <p className="section-kicker">author workflow</p>
           <h1>Submit a new term.</h1>
