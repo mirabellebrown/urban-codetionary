@@ -11,7 +11,7 @@ Urban Codetionary is a developer-first dictionary for coding slang and technical
 
 ## Local development
 1. Copy `.env.example` to `.env.local`.
-2. Fill in `NEXTAUTH_SECRET`, `GITHUB_ID`, `GITHUB_SECRET`, `ADMIN_EMAILS`, and `DATABASE_URL`.
+2. Fill in `NEXTAUTH_SECRET`, `GITHUB_ID`, `GITHUB_SECRET`, `ADMIN_GITHUB_LOGINS`, and `DATABASE_URL`.
 3. Install dependencies with `npm install`.
 4. Start the app with `npm run dev`.
 
@@ -31,7 +31,7 @@ See `docs/operations.md` for monitoring, health check, backup, and restore guida
 
 ## Secure-by-default choices
 - Admin auth uses a trusted identity provider instead of custom passwords.
-- The sign-in callback filters admins using the `ADMIN_EMAILS` allowlist.
+- The sign-in callback filters admins using the `ADMIN_GITHUB_LOGINS` and `ADMIN_EMAILS` allowlists.
 - New term submissions are validated server-side with Zod.
 - Outbound links are restricted to curated documentation hosts and YouTube.
 - Content stays plain-text in v1, which keeps XSS and formatting abuse low.

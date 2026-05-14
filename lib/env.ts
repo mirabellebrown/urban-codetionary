@@ -7,12 +7,17 @@ const envSchema = z.object({
   GITHUB_ID: z.string().min(1).optional(),
   GITHUB_SECRET: z.string().min(1).optional(),
   ADMIN_EMAILS: z.string().optional(),
+  ADMIN_GITHUB_LOGINS: z.string().optional(),
   DATABASE_URL: z.string().min(1).optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);
 const values = parsed.success ? parsed.data : {};
 const adminEmails = (values.ADMIN_EMAILS ?? "")
+  .split(",")
+  .map((value) => value.trim().toLowerCase())
+  .filter(Boolean);
+const adminGitHubLogins = (values.ADMIN_GITHUB_LOGINS ?? "")
   .split(",")
   .map((value) => value.trim().toLowerCase())
   .filter(Boolean);
@@ -24,6 +29,7 @@ export const env = {
   githubId: values.GITHUB_ID ?? "",
   githubSecret: values.GITHUB_SECRET ?? "",
   adminEmails,
+  adminGitHubLogins,
   databaseUrl: values.DATABASE_URL ?? "",
   githubEnabled: Boolean(values.GITHUB_ID && values.GITHUB_SECRET),
   authEnabled: Boolean(values.NEXTAUTH_SECRET && values.GITHUB_ID && values.GITHUB_SECRET),

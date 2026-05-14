@@ -35,8 +35,9 @@ export default async function SignInPage() {
             <p className="status-card__label">github sign-in</p>
             <h2>Use your allowlisted GitHub account.</h2>
             <p>
-              Only email addresses in <code>ADMIN_EMAILS</code> can authenticate
-              into the admin flow.
+              Only GitHub usernames in <code>ADMIN_GITHUB_LOGINS</code> or email
+              addresses in <code>ADMIN_EMAILS</code> can authenticate into the
+              admin flow.
             </p>
             <GitHubSignInButton callbackUrl="/admin/terms" />
           </div>
@@ -46,8 +47,8 @@ export default async function SignInPage() {
             <h2>GitHub auth is not configured yet.</h2>
             <p>
               Add <code>NEXTAUTH_SECRET</code>, <code>GITHUB_ID</code>,{" "}
-              <code>GITHUB_SECRET</code>, and an allowlisted address in{" "}
-              <code>ADMIN_EMAILS</code> to enable secure admin sign-in.
+              <code>GITHUB_SECRET</code>, and an allowlisted GitHub username in{" "}
+              <code>ADMIN_GITHUB_LOGINS</code> to enable secure admin sign-in.
             </p>
           </div>
         )}

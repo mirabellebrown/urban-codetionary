@@ -23,7 +23,14 @@ openssl rand -base64 32
 ## Admin Auth Variables
 - `GITHUB_ID`
 - `GITHUB_SECRET`
-- `ADMIN_EMAILS`
+- `ADMIN_EMAILS`: comma-separated admin email allowlist
+- `ADMIN_GITHUB_LOGINS`: comma-separated GitHub username allowlist
+
+Use `ADMIN_GITHUB_LOGINS` if your GitHub email is private. For example:
+
+```text
+ADMIN_GITHUB_LOGINS=mirabellebrown
+```
 
 GitHub OAuth callback URL:
 
