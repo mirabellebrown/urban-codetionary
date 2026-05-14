@@ -16,10 +16,12 @@ Urban Codetionary is a developer-first dictionary for coding slang and technical
 4. Start the app with `npm run dev`.
 
 See `docs/deployment.md` for the Vercel, environment variable, migration, and production verification checklist.
+See `docs/operations.md` for monitoring, health check, backup, and restore guidance.
 
 ## Useful scripts
 - `npm run dev` starts the app locally.
 - `npm run lint` runs ESLint.
+- `npm run test` runs focused unit tests.
 - `npm run typecheck` runs TypeScript without emitting files.
 - `npm run build` verifies the production build.
 - `npm run db:generate` creates Drizzle migrations.
