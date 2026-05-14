@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { GitHubSignInButton } from "@/components/auth/github-sign-in-button";
 import { getCurrentSession, isAdminSession } from "@/lib/auth";
 import { env } from "@/lib/env";
 
@@ -37,12 +38,7 @@ export default async function SignInPage() {
               Only email addresses in <code>ADMIN_EMAILS</code> can authenticate
               into the admin flow.
             </p>
-            <Link
-              className="status-card__action"
-              href="/api/auth/signin/github?callbackUrl=/admin/terms/new"
-            >
-              Continue with GitHub
-            </Link>
+            <GitHubSignInButton callbackUrl="/admin/terms" />
           </div>
         ) : (
           <div className="status-card is-warn">
