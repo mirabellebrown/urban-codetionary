@@ -9,6 +9,8 @@ const DOCUMENTATION_HOST_ALLOWLIST = [
   "github.com",
   "pragprog.com",
   "seths.blog",
+  "cloudflare.com",
+  "openai.com",
 ];
 
 const YOUTUBE_HOST_ALLOWLIST = [

@@ -146,6 +146,102 @@ export const starterTerms: TermEntry[] = [
       },
     ],
   },
+  {
+    slug: "prompt-injection",
+    name: "Prompt Injection",
+    partOfSpeech: "noun",
+    domain: "model security",
+    categoryTag: "ai",
+    subtopicTag: "llm-security",
+    complexity: 58,
+    eli5:
+      "Imagine giving a robot helper a rulebook, then someone slips in a note saying ignore the rulebook and do what I say. Prompt injection is that trick, but aimed at AI systems.",
+    devLevel:
+      "Prompt injection is an input attack where user-controlled text attempts to override system instructions, reveal hidden context, or trigger unsafe tool use. Treat model input as untrusted data, isolate tools, constrain outputs, and validate actions outside the model.",
+    upvotes: 176,
+    downvotes: 9,
+    links: [
+      {
+        label: "OWASP LLM Top 10",
+        url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+      },
+      {
+        label: "OpenAI safety best practices",
+        url: "https://platform.openai.com/docs/guides/safety-best-practices",
+      },
+    ],
+    videos: [],
+  },
+  {
+    slug: "dns-propagation",
+    name: "DNS Propagation",
+    partOfSpeech: "noun",
+    domain: "networking delay",
+    categoryTag: "networking",
+    subtopicTag: "dns",
+    complexity: 35,
+    eli5:
+      "You changed your address, but not every phone book updates at the same time. DNS propagation is the waiting period while the internet learns the new address for a domain.",
+    devLevel:
+      "DNS propagation is the time it takes for recursive resolvers and caches to observe updated DNS records. The practical delay depends on TTL values, resolver cache behavior, registrar updates, and whether stale records were cached before the change.",
+    upvotes: 128,
+    downvotes: 3,
+    links: [
+      {
+        label: "Cloudflare DNS concepts",
+        url: "https://developers.cloudflare.com/dns/concepts/",
+      },
+    ],
+    videos: [],
+  },
+  {
+    slug: "hydration-error",
+    name: "Hydration Error",
+    partOfSpeech: "noun",
+    domain: "frontend rendering",
+    categoryTag: "frontend",
+    subtopicTag: "react",
+    complexity: 54,
+    eli5:
+      "The server draws a page, then the browser tries to bring it to life. A hydration error happens when the browser sees a different page than the one the server drew.",
+    devLevel:
+      "A hydration error occurs when client-rendered React output does not match server-rendered HTML. Common causes include non-deterministic values, browser-only APIs during render, time-dependent markup, and conditional UI that differs between server and client.",
+    upvotes: 159,
+    downvotes: 7,
+    links: [
+      {
+        label: "Next.js hydration error docs",
+        url: "https://nextjs.org/docs/messages/react-hydration-error",
+      },
+      {
+        label: "React hydrateRoot reference",
+        url: "https://react.dev/reference/react-dom/client/hydrateRoot",
+      },
+    ],
+    videos: [],
+  },
+  {
+    slug: "ci-flake",
+    name: "CI Flake",
+    partOfSpeech: "noun",
+    domain: "delivery risk",
+    categoryTag: "devops",
+    subtopicTag: "ci",
+    complexity: 42,
+    eli5:
+      "A CI flake is a test that sometimes says the code is broken and sometimes says it is fine, even when nobody changed anything.",
+    devLevel:
+      "A CI flake is nondeterministic pipeline behavior, usually from timing assumptions, shared state, network dependencies, test order coupling, or insufficient isolation. Flakes erode trust in CI because engineers stop treating failures as actionable signals.",
+    upvotes: 117,
+    downvotes: 5,
+    links: [
+      {
+        label: "GitHub Actions docs",
+        url: "https://docs.github.com/actions",
+      },
+    ],
+    videos: [],
+  },
 ];
 
 export function getPublishedTerms(query = "") {
@@ -181,7 +277,69 @@ export function getTermBySlug(slug: string) {
 }
 
 export function getRelatedTerms(currentSlug: string, categoryTag: string) {
+  const currentTerm = getTermBySlug(currentSlug);
+
   return starterTerms
     .filter((term) => term.slug !== currentSlug && term.categoryTag === categoryTag)
+    .sort((left, right) => {
+      if (!currentTerm) {
+        return right.upvotes - right.downvotes - (left.upvotes - left.downvotes);
+      }
+
+      const leftSubtopicMatch = left.subtopicTag === currentTerm.subtopicTag ? 1 : 0;
+      const rightSubtopicMatch = right.subtopicTag === currentTerm.subtopicTag ? 1 : 0;
+      const leftComplexityDistance = Math.abs(left.complexity - currentTerm.complexity);
+      const rightComplexityDistance = Math.abs(right.complexity - currentTerm.complexity);
+
+      return (
+        rightSubtopicMatch -
+        leftSubtopicMatch ||
+        leftComplexityDistance -
+        rightComplexityDistance ||
+        right.upvotes -
+        right.downvotes -
+        (left.upvotes - left.downvotes)
+      );
+    })
     .slice(0, 2);
+}
+
+export function getCategories() {
+  return Array.from(
+    starterTerms.reduce((categories, term) => {
+      const current = categories.get(term.categoryTag) ?? { category: term.categoryTag, count: 0 };
+      categories.set(term.categoryTag, { ...current, count: current.count + 1 });
+      return categories;
+    }, new Map<string, { category: string; count: number }>()),
+  )
+    .map(([, value]) => value)
+    .sort((left, right) => left.category.localeCompare(right.category));
+}
+
+export function getSubtopicsByCategory(category: string) {
+  return Array.from(
+    starterTerms
+      .filter((term) => term.categoryTag === category)
+      .reduce((subtopics, term) => {
+        const current = subtopics.get(term.subtopicTag) ?? {
+          category: term.categoryTag,
+          subtopic: term.subtopicTag,
+          count: 0,
+        };
+        subtopics.set(term.subtopicTag, { ...current, count: current.count + 1 });
+        return subtopics;
+      }, new Map<string, { category: string; subtopic: string; count: number }>()),
+  )
+    .map(([, value]) => value)
+    .sort((left, right) => left.subtopic.localeCompare(right.subtopic));
+}
+
+export function getTermsByCategory(category: string) {
+  return getPublishedTerms().filter((term) => term.categoryTag === category);
+}
+
+export function getTermsBySubtopic(category: string, subtopic: string) {
+  return getPublishedTerms().filter(
+    (term) => term.categoryTag === category && term.subtopicTag === subtopic,
+  );
 }

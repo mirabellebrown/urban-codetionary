@@ -1,6 +1,7 @@
+import { CategoryBrowser } from "@/components/category-browser";
 import { HeroSearch } from "@/components/hero-search";
 import { TermCard } from "@/components/term-card";
-import { getPublishedTerms } from "@/lib/data/terms";
+import { getCategories, getPublishedTerms } from "@/lib/data/terms";
 
 type HomePageProps = {
   searchParams?: Promise<{ q?: string }>;
@@ -9,11 +10,13 @@ type HomePageProps = {
 export default async function HomePage({ searchParams }: HomePageProps) {
   const resolvedSearchParams = (await searchParams) ?? {};
   const query = typeof resolvedSearchParams.q === "string" ? resolvedSearchParams.q : "";
-  const terms = await getPublishedTerms(query);
+  const [terms, categories] = await Promise.all([getPublishedTerms(query), getCategories()]);
 
   return (
     <div className="page-stack">
       <HeroSearch query={query} resultCount={terms.length} />
+
+      <CategoryBrowser categories={categories} />
 
       <section className="feed-header">
         <div>

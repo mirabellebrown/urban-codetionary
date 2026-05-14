@@ -9,6 +9,8 @@ export const CATEGORY_OPTIONS = [
   "performance",
   "productivity",
   "engineering",
+  "frontend",
+  "devops",
 ] as const;
 
 function toStringValue(value: FormDataEntryValue | null) {

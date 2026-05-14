@@ -194,6 +194,7 @@ a:focus-visible {
 }
 
 .hero-panel,
+.browse-panel,
 .feed-header,
 .detail-intro,
 .empty-state {
@@ -208,6 +209,39 @@ a:focus-visible {
   padding: 36px;
   display: grid;
   gap: 24px;
+}
+
+.browse-panel {
+  display: grid;
+  gap: 18px;
+  padding: 24px;
+}
+
+.browse-panel h2 {
+  margin: 0;
+  color: var(--terminal-bright);
+}
+
+.browse-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.browse-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--terminal-border);
+  border-radius: var(--radius-card);
+  background: rgba(0, 0, 0, 0.72);
+  color: var(--terminal-bright);
+}
+
+.browse-pill small {
+  color: var(--text-muted);
 }
 
 .hero-panel__copy {
@@ -978,6 +1012,7 @@ a:focus-visible {
   }
 
   .hero-panel,
+  .browse-panel,
   .feed-header,
   .detail-intro,
   .empty-state {

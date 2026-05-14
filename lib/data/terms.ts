@@ -2,8 +2,12 @@ import { and, desc, eq, ilike, inArray, ne, or, sql } from "drizzle-orm";
 import { termResources, terms } from "@/db/schema";
 import type { TermEntry, VideoResource } from "@/lib/content/terms";
 import {
+  getCategories as getStarterCategories,
   getPublishedTerms as getStarterPublishedTerms,
   getRelatedTerms as getStarterRelatedTerms,
+  getSubtopicsByCategory as getStarterSubtopicsByCategory,
+  getTermsByCategory as getStarterTermsByCategory,
+  getTermsBySubtopic as getStarterTermsBySubtopic,
   getTermBySlug as getStarterTermBySlug,
 } from "@/lib/content/terms";
 import { db } from "@/lib/db";
@@ -124,6 +128,15 @@ export async function getRelatedTerms(currentSlug: string, categoryTag: string) 
     return getStarterRelatedTerms(currentSlug, categoryTag);
   }
 
+  const [currentTerm] = await db
+    .select({
+      subtopicTag: terms.subtopicTag,
+      complexity: terms.complexity,
+    })
+    .from(terms)
+    .where(eq(terms.slug, currentSlug))
+    .limit(1);
+
   const termRows = await db
     .select()
     .from(terms)
@@ -134,8 +147,85 @@ export async function getRelatedTerms(currentSlug: string, categoryTag: string) 
         ne(terms.slug, currentSlug),
       ),
     )
-    .orderBy(desc(sql<number>`${terms.upvotes} - ${terms.downvotes}`))
+    .orderBy(
+      desc(sql<number>`case when ${terms.subtopicTag} = ${currentTerm?.subtopicTag ?? ""} then 1 else 0 end`),
+      sql<number>`abs(${terms.complexity} - ${currentTerm?.complexity ?? 0})`,
+      desc(sql<number>`${terms.upvotes} - ${terms.downvotes}`),
+    )
     .limit(2);
+
+  const resourcesByTermId = await getResourcesByTermId(termRows.map((term) => term.id));
+
+  return termRows.map((term) => mapTerm(term, resourcesByTermId.get(term.id) ?? []));
+}
+
+export async function getCategories() {
+  if (!db) {
+    return getStarterCategories();
+  }
+
+  const rows = await db
+    .select({
+      category: terms.categoryTag,
+      count: sql<number>`count(*)::int`,
+    })
+    .from(terms)
+    .where(eq(terms.status, "published"))
+    .groupBy(terms.categoryTag)
+    .orderBy(terms.categoryTag);
+
+  return rows;
+}
+
+export async function getSubtopicsByCategory(category: string) {
+  if (!db) {
+    return getStarterSubtopicsByCategory(category);
+  }
+
+  return db
+    .select({
+      category: terms.categoryTag,
+      subtopic: terms.subtopicTag,
+      count: sql<number>`count(*)::int`,
+    })
+    .from(terms)
+    .where(and(eq(terms.status, "published"), eq(terms.categoryTag, category)))
+    .groupBy(terms.categoryTag, terms.subtopicTag)
+    .orderBy(terms.subtopicTag);
+}
+
+export async function getTermsByCategory(category: string) {
+  if (!db) {
+    return getStarterTermsByCategory(category);
+  }
+
+  const termRows = await db
+    .select()
+    .from(terms)
+    .where(and(eq(terms.status, "published"), eq(terms.categoryTag, category)))
+    .orderBy(desc(sql<number>`${terms.upvotes} - ${terms.downvotes}`));
+
+  const resourcesByTermId = await getResourcesByTermId(termRows.map((term) => term.id));
+
+  return termRows.map((term) => mapTerm(term, resourcesByTermId.get(term.id) ?? []));
+}
+
+export async function getTermsBySubtopic(category: string, subtopic: string) {
+  if (!db) {
+    return getStarterTermsBySubtopic(category, subtopic);
+  }
+
+  const termRows = await db
+    .select()
+    .from(terms)
+    .where(
+      and(
+        eq(terms.status, "published"),
+        eq(terms.categoryTag, category),
+        eq(terms.subtopicTag, subtopic),
+      ),
+    )
+    .orderBy(desc(sql<number>`${terms.upvotes} - ${terms.downvotes}`));
 
   const resourcesByTermId = await getResourcesByTermId(termRows.map((term) => term.id));
 
