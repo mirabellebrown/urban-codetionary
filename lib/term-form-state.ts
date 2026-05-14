@@ -14,6 +14,7 @@ export type TermFormState = {
   status: "idle" | "success" | "error";
   message: string;
   fieldErrors: Partial<Record<TermFormField, string[]>>;
+  termId?: string;
 };
 
 export const initialTermFormState: TermFormState = {

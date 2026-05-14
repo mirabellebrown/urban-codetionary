@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { submitTermAction } from "@/app/admin/terms/new/actions";
@@ -33,6 +34,16 @@ export function TermForm() {
         <div className={`form-banner form-banner--${state.status}`}>
           <strong>{state.status === "success" ? "Submission checked" : "Submission blocked"}</strong>
           <p>{state.message}</p>
+          {state.status === "success" && state.termId ? (
+            <div className="form-banner__actions">
+              <Link className="table-action" href={`/admin/terms/${state.termId}/edit`}>
+                edit draft
+              </Link>
+              <Link className="table-action" href="/admin/terms">
+                manage terms
+              </Link>
+            </div>
+          ) : null}
         </div>
       ) : null}
 

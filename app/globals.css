@@ -854,6 +854,13 @@ a:focus-visible {
   background: rgba(0, 0, 0, 0.78);
 }
 
+.form-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
 .form-banner--success {
   border-color: rgba(74, 250, 138, 0.2);
   background: rgba(4, 15, 4, 0.92);

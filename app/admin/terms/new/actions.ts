@@ -73,7 +73,7 @@ export async function submitTermAction(
     };
   }
 
-  await db.transaction(async (transaction) => {
+  const createdTermId = await db.transaction(async (transaction) => {
     const [createdTerm] = await transaction
       .insert(terms)
       .values({
@@ -134,11 +134,14 @@ export async function submitTermAction(
         status: "draft",
       }),
     });
+
+    return createdTerm.id;
   });
 
   return {
     ...initialTermFormState,
     status: "success",
     message: "Draft saved. Revision and audit records were created alongside the term.",
+    termId: createdTermId,
   };
 }
