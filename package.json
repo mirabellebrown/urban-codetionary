@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:unit": "vitest run",
-    "test:e2e": "playwright test",
+    "test:e2e": "playwright install chromium && playwright test",
     "test:all": "npm run test:unit && npm run test:e2e",
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
