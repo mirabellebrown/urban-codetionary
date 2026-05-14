@@ -53,6 +53,10 @@ Then seed starter content:
 npm run db:seed
 ```
 
+## Optional: Admin checks dashboard
+
+To use `/admin/checks` in production (dispatch GitHub Actions from the browser), add `GITHUB_ACTIONS_TOKEN` to Vercel and redeploy. Token permissions, optional `GITHUB_ACTIONS_*` overrides, and smoke-test steps are in [`operations.md`](operations.md).
+
 ## Verification Checklist
 - Homepage loads at `/`
 - A term detail page loads at `/term/sql-injection`

@@ -13,6 +13,7 @@
   - `/sign-in`
   - `/admin/terms`
   - `/admin/terms/new`
+  - `/admin/checks` (only if `GITHUB_ACTIONS_TOKEN` is set)
   - `/health`
 
 ## Continuous Integration
@@ -33,6 +34,7 @@ npm run build
 ## Admin Checks Dashboard
 - The admin-only checks dashboard lives at `/admin/checks`.
 - The dashboard does not run shell commands inside Vercel. It triggers the `Admin Checks` GitHub Actions workflow and reads back run results.
+- While a workflow is queued or in progress, the page refreshes on a short timer so status moves to passed/failed without a manual reload. Use the GitHub run link for full logs.
 - Use smaller checks while developing:
   - `Lint` for style and obvious code mistakes.
   - `Unit tests` for validation, search, and link-policy logic.
@@ -93,3 +95,4 @@ npm run db:migrate
 7. Verify homepage search, one public term detail page, one category page, and one subtopic page.
 8. Confirm GitHub sign-in still works.
 9. Confirm the admin draft, edit, publish, and public view workflow still works.
+10. If `GITHUB_ACTIONS_TOKEN` is configured, open `/admin/checks`, confirm runs load, trigger a small check (for example `Lint`), and confirm the UI reaches a completed passed or failed state.
