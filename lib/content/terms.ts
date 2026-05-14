@@ -27,6 +27,41 @@ export type TermEntry = {
   videos: VideoResource[];
 };
 
+function getVoteScore(term: TermEntry) {
+  return term.upvotes - term.downvotes;
+}
+
+export function getTermSearchScore(term: TermEntry, query: string) {
+  const normalizedQuery = query.trim().toLowerCase();
+
+  if (!normalizedQuery) {
+    return getVoteScore(term);
+  }
+
+  const fields = [
+    { value: term.name, weight: 60 },
+    { value: term.categoryTag, weight: 35 },
+    { value: term.subtopicTag, weight: 35 },
+    { value: term.domain, weight: 25 },
+    { value: term.eli5, weight: 8 },
+    { value: term.devLevel, weight: 8 },
+  ];
+
+  return fields.reduce((score, field) => {
+    const value = field.value.toLowerCase();
+
+    if (value === normalizedQuery) {
+      return score + field.weight * 2;
+    }
+
+    if (value.includes(normalizedQuery)) {
+      return score + field.weight;
+    }
+
+    return score;
+  }, 0);
+}
+
 export const starterTerms: TermEntry[] = [
   {
     slug: "sql-injection",
@@ -242,33 +277,283 @@ export const starterTerms: TermEntry[] = [
     ],
     videos: [],
   },
+  {
+    slug: "n-plus-one-query",
+    name: "N+1 Query",
+    partOfSpeech: "noun",
+    domain: "database performance",
+    categoryTag: "databases",
+    subtopicTag: "query-performance",
+    complexity: 49,
+    eli5:
+      "You ask one friend for a list of classmates, then call every classmate one by one for their favorite snack. It works, but it is slow. An N+1 query is a database version of that mistake.",
+    devLevel:
+      "An N+1 query happens when code runs one initial query and then issues another query for each returned row. Fix it with joins, eager loading, batching, or query shapes that fetch related data in fewer round trips.",
+    upvotes: 188,
+    downvotes: 6,
+    links: [
+      {
+        label: "Prisma query optimization guide",
+        url: "https://www.prisma.io/docs/orm/prisma-client/queries/query-optimization-performance",
+      },
+      {
+        label: "PostgreSQL join documentation",
+        url: "https://www.postgresql.org/docs/current/queries-table-expressions.html",
+      },
+    ],
+    videos: [],
+  },
+  {
+    slug: "idempotency",
+    name: "Idempotency",
+    partOfSpeech: "noun",
+    domain: "api safety",
+    categoryTag: "backend",
+    subtopicTag: "apis",
+    complexity: 45,
+    eli5:
+      "Pressing an elevator button once or ten times should still call the elevator once. Idempotency means repeating the same request does not accidentally repeat the side effect.",
+    devLevel:
+      "Idempotency is a property where repeated identical operations produce the same final state. APIs often use idempotency keys to make retries safe for payments, job creation, message processing, and other side-effecting actions.",
+    upvotes: 204,
+    downvotes: 5,
+    links: [
+      {
+        label: "MDN HTTP request methods",
+        url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods",
+      },
+      {
+        label: "Stripe idempotent requests",
+        url: "https://docs.stripe.com/api/idempotent_requests",
+      },
+    ],
+    videos: [],
+  },
+  {
+    slug: "rate-limiting",
+    name: "Rate Limiting",
+    partOfSpeech: "noun",
+    domain: "traffic control",
+    categoryTag: "security",
+    subtopicTag: "abuse-prevention",
+    complexity: 38,
+    eli5:
+      "A water fountain can only pour so much water at once. Rate limiting tells users or bots they have to slow down when they ask for too much too fast.",
+    devLevel:
+      "Rate limiting restricts how many requests a client can make in a time window. Common implementations use fixed windows, sliding windows, token buckets, or leaky buckets to protect availability and reduce abuse.",
+    upvotes: 221,
+    downvotes: 4,
+    links: [
+      {
+        label: "Cloudflare rate limiting concepts",
+        url: "https://developers.cloudflare.com/waf/rate-limiting-rules/",
+      },
+    ],
+    videos: [],
+  },
+  {
+    slug: "csrf",
+    name: "CSRF",
+    partOfSpeech: "noun",
+    domain: "web attack",
+    categoryTag: "security",
+    subtopicTag: "web-security",
+    complexity: 52,
+    eli5:
+      "You are logged into your bank, and a sneaky website tries to make your browser press a bank button without asking you. CSRF is tricking a trusted browser session into doing something unwanted.",
+    devLevel:
+      "Cross-Site Request Forgery abuses authenticated browser state to submit unwanted requests. Mitigate it with SameSite cookies, CSRF tokens, origin checks, and avoiding unsafe state changes through GET requests.",
+    upvotes: 167,
+    downvotes: 8,
+    links: [
+      {
+        label: "OWASP CSRF Prevention Cheat Sheet",
+        url: "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html",
+      },
+      {
+        label: "MDN SameSite cookies",
+        url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite",
+      },
+    ],
+    videos: [],
+  },
+  {
+    slug: "oauth",
+    name: "OAuth",
+    partOfSpeech: "noun",
+    domain: "authorization protocol",
+    categoryTag: "security",
+    subtopicTag: "auth",
+    complexity: 57,
+    eli5:
+      "OAuth is like giving a valet key to an app. It lets the app do specific things without giving it your real password.",
+    devLevel:
+      "OAuth is an authorization framework for delegated access. Instead of sharing credentials, clients receive scoped tokens after a redirect-based grant flow, commonly using PKCE for public clients.",
+    upvotes: 239,
+    downvotes: 10,
+    links: [
+      {
+        label: "GitHub OAuth app documentation",
+        url: "https://docs.github.com/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps",
+      },
+      {
+        label: "Auth.js OAuth guide",
+        url: "https://authjs.dev/getting-started/authentication/oauth",
+      },
+    ],
+    videos: [],
+  },
+  {
+    slug: "webhook",
+    name: "Webhook",
+    partOfSpeech: "noun",
+    domain: "event callback",
+    categoryTag: "backend",
+    subtopicTag: "integrations",
+    complexity: 31,
+    eli5:
+      "A webhook is a doorbell for apps. Instead of checking every minute if something happened, another app rings your doorbell when it does.",
+    devLevel:
+      "A webhook is an HTTP callback triggered by an external event. Production webhook handlers should verify signatures, be idempotent, respond quickly, and move slow work into background processing.",
+    upvotes: 173,
+    downvotes: 4,
+    links: [
+      {
+        label: "GitHub webhook documentation",
+        url: "https://docs.github.com/webhooks",
+      },
+    ],
+    videos: [],
+  },
+  {
+    slug: "feature-flag",
+    name: "Feature Flag",
+    partOfSpeech: "noun",
+    domain: "release control",
+    categoryTag: "engineering",
+    subtopicTag: "delivery",
+    complexity: 29,
+    eli5:
+      "A feature flag is a light switch for code. The code can be in the house, but you choose when to turn the light on.",
+    devLevel:
+      "A feature flag gates behavior at runtime, letting teams separate deployment from release. Flags support gradual rollouts, experiments, kill switches, and safer migrations, but stale flags become technical debt.",
+    upvotes: 146,
+    downvotes: 3,
+    links: [
+      {
+        label: "Martin Fowler on feature toggles",
+        url: "https://martinfowler.com/articles/feature-toggles.html",
+      },
+    ],
+    videos: [],
+  },
+  {
+    slug: "edge-function",
+    name: "Edge Function",
+    partOfSpeech: "noun",
+    domain: "edge runtime",
+    categoryTag: "backend",
+    subtopicTag: "edge",
+    complexity: 47,
+    eli5:
+      "An edge function is code that runs close to the person using your website, like opening a tiny helper desk in their neighborhood instead of only at headquarters.",
+    devLevel:
+      "An edge function runs in geographically distributed runtimes to reduce latency for request handling. It is useful for redirects, personalization, auth checks, and lightweight APIs, but usually has stricter runtime limits than a full server.",
+    upvotes: 132,
+    downvotes: 4,
+    links: [
+      {
+        label: "Vercel Edge Functions docs",
+        url: "https://vercel.com/docs/functions/runtimes/edge",
+      },
+      {
+        label: "Cloudflare Workers docs",
+        url: "https://developers.cloudflare.com/workers/",
+      },
+    ],
+    videos: [],
+  },
+  {
+    slug: "race-condition",
+    name: "Race Condition",
+    partOfSpeech: "noun",
+    domain: "concurrency bug",
+    categoryTag: "engineering",
+    subtopicTag: "concurrency",
+    complexity: 64,
+    eli5:
+      "Two people try to write on the same sticky note at the same time. Whoever writes last wins, and the result may be wrong. That is the feeling of a race condition.",
+    devLevel:
+      "A race condition occurs when program behavior depends on unpredictable timing between concurrent operations. Fixes often involve locks, transactions, atomic operations, queues, or designing state transitions to be conflict-safe.",
+    upvotes: 201,
+    downvotes: 6,
+    links: [
+      {
+        label: "MDN JavaScript concurrency model",
+        url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop",
+      },
+    ],
+    videos: [],
+  },
+  {
+    slug: "observability",
+    name: "Observability",
+    partOfSpeech: "noun",
+    domain: "production visibility",
+    categoryTag: "devops",
+    subtopicTag: "monitoring",
+    complexity: 50,
+    eli5:
+      "Observability is giving your app a dashboard, a diary, and a set of alarms so you can understand what happened when something feels broken.",
+    devLevel:
+      "Observability is the ability to infer system state from outputs like logs, metrics, traces, events, and errors. Good observability helps teams debug unknown failures without shipping new instrumentation every time.",
+    upvotes: 184,
+    downvotes: 5,
+    links: [
+      {
+        label: "OpenTelemetry documentation",
+        url: "https://opentelemetry.io/docs/",
+      },
+    ],
+    videos: [],
+  },
+  {
+    slug: "cache-invalidation",
+    name: "Cache Invalidation",
+    partOfSpeech: "noun",
+    domain: "state freshness",
+    categoryTag: "performance",
+    subtopicTag: "caching",
+    complexity: 61,
+    eli5:
+      "A cache is a shortcut notebook. Cache invalidation is knowing when the notebook is old and needs a fresh answer.",
+    devLevel:
+      "Cache invalidation is the process of expiring or updating cached data when source data changes. It is hard because freshness, latency, consistency, and cost often trade off against each other.",
+    upvotes: 198,
+    downvotes: 9,
+    links: [
+      {
+        label: "Next.js caching docs",
+        url: "https://nextjs.org/docs/app/building-your-application/caching",
+      },
+    ],
+    videos: [],
+  },
 ];
 
 export function getPublishedTerms(query = "") {
   const normalizedQuery = query.trim().toLowerCase();
 
   const filtered = normalizedQuery
-    ? starterTerms.filter((term) => {
-        const searchable = [
-          term.name,
-          term.categoryTag,
-          term.subtopicTag,
-          term.eli5,
-          term.devLevel,
-          term.domain,
-        ]
-          .join(" ")
-          .toLowerCase();
-
-        return searchable.includes(normalizedQuery);
-      })
+    ? starterTerms.filter((term) => getTermSearchScore(term, normalizedQuery) > 0)
     : starterTerms;
 
   return [...filtered].sort(
     (left, right) =>
-      right.upvotes -
-      right.downvotes -
-      (left.upvotes - left.downvotes),
+      getTermSearchScore(right, normalizedQuery) -
+      getTermSearchScore(left, normalizedQuery) ||
+      getVoteScore(right) -
+      getVoteScore(left),
   );
 }
 

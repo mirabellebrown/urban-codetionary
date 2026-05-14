@@ -9,6 +9,7 @@ import {
   getTermsByCategory as getStarterTermsByCategory,
   getTermsBySubtopic as getStarterTermsBySubtopic,
   getTermBySlug as getStarterTermBySlug,
+  getTermSearchScore,
 } from "@/lib/content/terms";
 import { db } from "@/lib/db";
 
@@ -101,7 +102,16 @@ export async function getPublishedTerms(query = "") {
 
   const resourcesByTermId = await getResourcesByTermId(termRows.map((term) => term.id));
 
-  return termRows.map((term) => mapTerm(term, resourcesByTermId.get(term.id) ?? []));
+  const mappedTerms = termRows.map((term) => mapTerm(term, resourcesByTermId.get(term.id) ?? []));
+
+  if (!normalizedQuery) {
+    return mappedTerms;
+  }
+
+  return mappedTerms.sort(
+    (left, right) =>
+      getTermSearchScore(right, normalizedQuery) - getTermSearchScore(left, normalizedQuery),
+  );
 }
 
 export async function getTermBySlug(slug: string) {

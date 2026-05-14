@@ -11,6 +11,12 @@ const DOCUMENTATION_HOST_ALLOWLIST = [
   "seths.blog",
   "cloudflare.com",
   "openai.com",
+  "prisma.io",
+  "stripe.com",
+  "authjs.dev",
+  "martinfowler.com",
+  "vercel.com",
+  "opentelemetry.io",
 ];
 
 const YOUTUBE_HOST_ALLOWLIST = [

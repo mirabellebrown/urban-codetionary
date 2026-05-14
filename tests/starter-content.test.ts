@@ -13,11 +13,17 @@ describe("starter content fallback", () => {
     expect(results.map((term) => term.slug)).toContain("sql-injection");
   });
 
+  it("ranks direct title matches above body-text matches", () => {
+    const results = getPublishedTerms("oauth");
+
+    expect(results[0].slug).toBe("oauth");
+  });
+
   it("groups categories for homepage browsing", () => {
     const categories = getCategories();
 
     expect(categories.map((category) => category.category)).toEqual(
-      expect.arrayContaining(["ai", "databases", "frontend", "networking"]),
+      expect.arrayContaining(["ai", "backend", "databases", "frontend", "networking"]),
     );
   });
 
